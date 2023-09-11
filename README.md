@@ -96,10 +96,8 @@ onedomain.com -> {routes}/onedomain.com.ini
 raul.goblin.es -> {routes}/raul.goblin.es.ini
 ```
 
-Example:
+Example: ../routes/raul.goblin.es.ini
 ```
-../routes/raul.goblin.es.ini
-
 ; public or auth-req key
 ;    You can use public or auth-req indistinctly to indicate if an authentication is required for the section.
 ;
@@ -113,8 +111,8 @@ Example:
 ;    auth-req | false       | NO
 ;
 ; script key
-;   if empty then will load last section name php file
-;   sample: [api/v1/login/] will load [sources_folder_configured]/api/v1/login/login.php
+;   if empty then will try load last section name php file:
+;      sample: [api/v1/login/] will try to load {sources_path}/api/v1/login/login.php
 
 
 [default]
