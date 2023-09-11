@@ -25,7 +25,7 @@ wtl    = 0
 ; on path the string {host} will be replaced by the _SERVER['HTTP_HOST']
 path   = '../_tmp/log/mirouter_{host}.log'
 
-; how many MB max can have the log, when reach the MB will be renamed to logfile.YmdHis
+; how many MB max can have the log, when reach the MB will be renamed to logfile.YmdHis and a new one will be created
 rotate_log_mb = 10
 ```
 
