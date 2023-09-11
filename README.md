@@ -48,11 +48,11 @@ There must exists a file hosts.ini on the routes path.
 hosts.ini declare the hosts that MiRouter must attend.
 Sample of hosts.ini
 ```
-; If routes is false then no routes are allowed
-; If routes is true then must exists a ini file called like the section
-
 [raul.goblin.es]
+; If routes is true then must exists a ini file called like the section on the routes path
+; in this sample must exists the file ../routes/raul.goblin.es.ini
 routes=true
+
 ;check_session
 ; Script to check if the session is valid,
 ; the script must have a function called check_authenticated() that returns an object with one or two props:
@@ -72,10 +72,14 @@ routes=true
 check_session=api/v1/check_authenticated.php
 
 [goblin.es]
+; If routes is true then must exists a ini file called like the section on the routes path
+; in this sample must exists the file ../routes/goblin.es.ini
 routes=true
+
 ; check_auth.php must have a function called check_auth()
 check_session=api/v1/check_auth.php
 
 [pepe.goblin.es]
+; If routes is false then no routes are allowed
 routes=false
 ```
