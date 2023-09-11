@@ -1,9 +1,11 @@
-# mirouter
-MiRouter routes HTTP requests byt config files to php, nodejs, python or anything
+# MiRouter
+MiRouter routes HTTP requests to php, nodejs, python or anything
 
 With MiRouter can serve as an API gateway or to serve pages dinamically.
 
 Mirouter is 99% configurable.
+
+### How it works?
 
 When instantiated required an array with the main config.
 
