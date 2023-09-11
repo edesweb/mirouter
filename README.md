@@ -1,6 +1,8 @@
 # mirouter
 MiRouter routes HTTP requests byt config files to php, nodejs, python or anything
 
+With MiRouter can serve as an API gateway or to serve pages dinamically.
+
 Mirouter is 99% configurable.
 
 When instantiated required an array with the main config.
@@ -44,7 +46,7 @@ if ($router->returnCode < 0)
 include $router->filename;
 ```
 
-There must exists a file hosts.ini on the routes path.
+Must exists a file hosts.ini on the routes path.
 hosts.ini declare the hosts that MiRouter must attend.
 Sample of hosts.ini
 ```
@@ -82,4 +84,58 @@ check_session=api/v1/check_auth.php
 [pepe.goblin.es]
 ; If routes is false then no routes are allowed
 routes=false
+```
+
+When MiRouter find a host declared attendable then reads its config file, this file must be called like the host section and end with .ini
+
+This .ini file must contain the allowed routes for that host.
+```
+onedomain.com -> {routes}/onedomain.com.ini
+raul.goblin.es -> {routes}/raul.goblin.es.ini
+```
+
+Example:
+```
+../routes/raul.goblin.es.ini
+
+; public or auth-req key
+;    You can use public or auth-req indistinctly to indicate if an authentication is required for the section.
+;
+;    param    | value       | auth required
+;    --------------------------------
+;    public   | not present | NO
+;    public   | true        | NO
+;    public   | false       | YES
+;    auth-req | not present | NO
+;    auth-req | true        | YES
+;    auth-req | false       | NO
+;
+; script key
+;   if empty then will load last section name php file
+;   sample: [api/v1/login/] will load [sources_folder_configured]/api/v1/login/login.php
+
+
+[default]
+public=false
+script=api/v1/login/login.php
+
+[auth]
+public=true
+script=api/v1/authenticate_by_apikey.php
+
+[users/search]
+public=false
+script=api/v1/users/search.php
+
+[main]
+auth-req=false
+script=api/v1/main/main.php
+
+[cliens/add]
+public=false
+script=api/v1/clients/clients.php
+
+[inscription]
+public=true
+script=inscription.php
 ```
