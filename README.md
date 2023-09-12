@@ -16,7 +16,7 @@ Mirouter is 99% configurable.
 
 Simply copy the file `MiRouter.php` and use it.
 
-Example of dir installation:
+Example of directory installation with sample files:
 ```
 application-root/
 ├─ http/  (this is the document root)
