@@ -14,9 +14,9 @@ Mirouter is 99% configurable.
 
 ### .htaccess
 
-You should configure a `.htaccess` file on one  document root to activate automatically MiRouter
+You should configure one `.htaccess` file on a document root to activate automatically MiRouter.
 
-.htaccess sample file, this redirects all to {*document_root*}/mirouter.php
+*.htaccess* sample file, this redirects all to {*document_root*}/mirouter.php
 ```
 <IfModule mod_rewrite.c>
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -30,6 +30,7 @@ You should configure a `.htaccess` file on one  document root to activate automa
 <?php
     include '../router.php'
 ```
+A sample of *router.php* is bellow.
 
 ### How does it works?
 
@@ -59,7 +60,7 @@ path   = '../_tmp/log/mirouter_{host}.log'
 rotate_log_mb = 10
 ```
 
-Sample use:
+Sample use ( **router.php** ):
 ```
 namespace lib\MiRouter;
 include '../lib/MiRouter/MiRouter.php';
