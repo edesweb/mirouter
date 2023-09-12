@@ -69,7 +69,7 @@ Sample use ( **application-root/router.php** ):
 include 'MiRouter.php';
 
 $routerIni = parse_ini_file( 'router.ini', true);
-$router = new MiRouter\MiRouter( $routerIni  );
+$router    = new MiRouter( $routerIni  );
 if ($router->returnCode < 0) 
   die("($router->returnCode) $router->reason");
 
