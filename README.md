@@ -30,6 +30,7 @@ You should configure one `.htaccess` file on a document root to activate automat
 <?php
     include '../router.php'
 ```
+
 A sample of *router.php* is bellow.
 
 ### How does it works?
