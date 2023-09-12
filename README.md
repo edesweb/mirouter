@@ -16,11 +16,38 @@ Mirouter is 99% configurable.
 
 Simply copy the file `MiRouter.php` and use it.
 
+Example of dir installation:
+```
+application-root/
+├─ http/  (this is the document root)
+│  ├─ .htaccess
+│  ├─ router.php
+├─ sources/
+│  ├─ api/
+│  │   ├─ clients/
+│  │   │     ├─ search.php
+│  │   ├─ authenticate_by_apikey.php
+│  │   ├─ check_authenticated.php
+├─ routes/
+│  ├─ hosts.ini
+│  ├─ acme.com.ini
+│  ├─ little.acme.com.ini
+│  ├─ otherdomain.net.ini
+│  ├─ and.onemore.org.ini
+├─ MiRouter.php
+├─ router.php
+├─ router.ini
+
+```
+
+
+
+
 ### .htaccess
 
 You should configure one `.htaccess` file on a document root to activate automatically MiRouter.
 
-*.htaccess* sample file, this redirects all to {*document_root*}/mirouter.php
+*.htaccess* example file, this redirects all to {*document_root*}/mirouter.php
 ```
 <IfModule mod_rewrite.c>
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -35,14 +62,15 @@ You should configure one `.htaccess` file on a document root to activate automat
     include '../router.php'
 ```
 
-A sample of *router.php* is bellow.
+An example of *router.php* is bellow.
+
 
 ### How does it works?
 
 When instantiated required an array with the main config.
 
 ```
-THIS IS A SAMPLE CONFIG FILE CALLED router.ini
+THIS IS AN EXAMPLE CONFIG FILE CALLED router.ini
 
 [paths]
 ; routes contains the file "hosts.ini" and other .ini files indicated con it
@@ -81,7 +109,7 @@ Must exists a file `hosts.ini` on the routes path.
 
 In `hosts.ini`we declare the hosts that MiRouter must attend.
 
-Sample of `hosts.ini`
+Example of `hosts.ini`
 ```
 [big.acme.com]
 ; If routes is true then must exists a ini file called like the section on the routes path
