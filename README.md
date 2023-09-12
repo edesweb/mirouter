@@ -48,13 +48,15 @@ if ($router->returnCode < 0)
 include $router->filename;
 ```
 
-Must exists a file hosts.ini on the routes path.
-hosts.ini declare the hosts that MiRouter must attend.
-Sample of hosts.ini
+Must exists a file `hosts.ini` on the routes path.
+
+In `hosts.ini`we declare the hosts that MiRouter must attend.
+
+Sample of `hosts.ini`
 ```
-[raul.goblin.es]
+[big.acme.com]
 ; If routes is true then must exists a ini file called like the section on the routes path
-; in this sample must exists the file ../routes/raul.goblin.es.ini
+; in this sample must exists the file ../routes/big.acme.com.ini
 routes=true
 
 ;check_session
@@ -75,28 +77,30 @@ routes=true
 ;  on this sample: ../src/api/v1/check_authenticated.php
 check_session=api/v1/check_authenticated.php
 
-[goblin.es]
+[acme.net]
 ; If routes is true then must exists a ini file called like the section on the routes path
-; in this sample must exists the file ../routes/goblin.es.ini
+; in this sample must exists the file ../routes/acme.net.ini
 routes=true
 
 ; check_auth.php must have a function called check_auth()
 check_session=api/v1/check_auth.php
 
-[pepe.goblin.es]
+[small.acme.com]
 ; If routes is false then no routes are allowed
 routes=false
 ```
 
-When MiRouter find a host declared attendable then reads its config file, this file must be called like the host section and end with .ini
+### Routes file
 
-This .ini file must contain the allowed routes for that host.
+When MiRouter find a host declared as attendable then reads its config file, it contains the route parts of the URL as sections, this file must be called like the host section and end with `.ini`
+
+This `.ini` file must contain the allowed routes for that host.
 ```
-onedomain.com -> {routes}/onedomain.com.ini
-raul.goblin.es -> {routes}/raul.goblin.es.ini
+onedomain.com -> {routes_path}/onedomain.com.ini
+raul.goblin.es -> {routes_pah}/raul.goblin.es.ini
 ```
 
-Example: ../routes/raul.goblin.es.ini
+Example: `../routes/big.acme.com.ini`
 ```
 ; public or auth-req key
 ;    You can use public or auth-req indistinctly to indicate if an authentication is required for the section.
@@ -113,6 +117,8 @@ Example: ../routes/raul.goblin.es.ini
 ; script key
 ;   if empty then will try load last section name php file:
 ;      sample: [api/v1/login/] will try to load {sources_path}/api/v1/login/login.php
+;
+; [default] section is a fallback used when a route is not found
 
 
 [default]
@@ -139,3 +145,9 @@ script=api/v1/clients/clients.php
 public=true
 script=inscription.php
 ```
+
+On that file should exists the section corresponding with the route of the URL.
+
+In `acme.com/fireworks` sould exists the section `fireworks`, if does't then will try to use de `default` section and if also doesn't exists then that will be an error.
+
+When a route is found then MiRouter checks if the key `public` or `auth-req`, if the route requires authentication then the file indicated on the key `auth_checker' in the `hosts.ini` file will be used to check if the user is authenticated. MiRouter doesn't have any auth system, you must provide it.
