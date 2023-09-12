@@ -243,7 +243,7 @@ class RequestUri
             $params 	= explode('&', trim($params));
             foreach ($params as $k => $v) {
                 $v = explode('=', $v);
-                $this->params[$v[0]]=$v[1];
+                $this->params[$v[0]]=$v[1]??'';
             }
         }
         $this->uri = preg_replace('/\/\/{1,}/', '/', $this->uri);		// Replace multiple //
