@@ -47,7 +47,7 @@ application-root/
 
 You should configure one `.htaccess` file on a document root to activate automatically MiRouter.
 
-*.htaccess* example file, this redirects all to {*document_root*}/mirouter.php
+*.htaccess* example file, this redirects all to **application-root/http/mirouter.php**
 ```
 <IfModule mod_rewrite.c>
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -56,22 +56,31 @@ You should configure one `.htaccess` file on a document root to activate automat
 </IfModule>
 ```
 
-`/router.php` file (we have the main router file out of document root):
+### How does it works?
+
+Sample use ( **application-root/http/router.php** ):
 ```
 <?php
-    include '../router.php'
+    include '../router.php';  // this load application-root/router.php
 ```
 
-An example of *router.php* is bellow.
+Sample use ( **application-root/router.php** ):
+```
+include 'MiRouter.php';
 
+$routerIni = parse_ini_file( 'router.ini', true);
+$router = new MiRouter\MiRouter( $routerIni  );
+if ($router->returnCode < 0) 
+  die("($router->returnCode) $router->reason");
 
-### How does it works?
+include $router->filename;
+```
+
 
 When instantiated required an array with the main config.
 
+This is an example config file **application-root/router.ini**
 ```
-THIS IS AN EXAMPLE CONFIG FILE CALLED router.ini
-
 [paths]
 ; routes contains the file "hosts.ini" and other .ini files indicated con it
 routes = '../routes/'
@@ -93,23 +102,11 @@ path   = '../_tmp/log/mirouter_{host}.log'
 rotate_log_mb = 10
 ```
 
-Sample use ( **router.php** ):
-```
-include '../lib/MiRouter.php';
-
-$routerIni = parse_ini_file( 'router.ini', true);
-$router = new MiRouter\MiRouter( $routerIni  );
-if ($router->returnCode < 0) 
-  die("($router->returnCode) $router->reason");
-
-include $router->filename;
-```
-
 Must exists a file `hosts.ini` on the routes path.
 
 In `hosts.ini`we declare the hosts that MiRouter must attend.
 
-Example of `hosts.ini`
+Example of **application-root/routes/hosts.ini**
 ```
 [big.acme.com]
 ; If routes is true then must exists a ini file called like the section on the routes path
@@ -158,7 +155,7 @@ onedomain.com -> {routes_path}/onedomain.com.ini
 raul.goblin.es -> {routes_pah}/raul.goblin.es.ini
 ```
 
-Example: `../routes/big.acme.com.ini`
+Example: **application-root/routes/big.acme.com.ini**
 ```
 ; public or auth-req key
 ;    You can use public or auth-req indistinctly to indicate if an authentication is required for the section.
