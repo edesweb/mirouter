@@ -10,7 +10,11 @@ Mirouter is 99% configurable.
 * Apache HTTP server
 * PHP 7+
 
+*Zero Dependencies*
+
 ### Install
+
+Simply copy the file `MiRouter.php` and use it.
 
 ### .htaccess
 
@@ -63,10 +67,7 @@ rotate_log_mb = 10
 
 Sample use ( **router.php** ):
 ```
-namespace lib\MiRouter;
-include '../lib/MiRouter/MiRouter.php';
-
-use MiRouter;
+include '../lib/MiRouter.php';
 
 $routerIni = parse_ini_file( 'router.ini', true);
 $router = new MiRouter\MiRouter( $routerIni  );
