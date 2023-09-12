@@ -3,7 +3,7 @@
  * MiRouter Class to route http request to our configured PHP files.
  *
  * @author Raúl Díaz <raul.diaztorres@gmail.com>
- * @license  MIT
+ * @license MIT
  *
  * @link     https://github.com/edesweb/mirouter
  */
@@ -14,7 +14,6 @@ class MiRouter
     const DBGOUT = 2;
 
     // What To Debug
-   	//private int $WTD=self::DBGNONE;
     private int $WTD=self::DBGOUT;
 
     private string $logFile;
@@ -40,7 +39,8 @@ class MiRouter
 		$this->filename	  = $filename;
 	}
 
-    private function dbg( $msg ){
+    private function dbg( $msg ): void
+	{
         if( $this->WTD&self::DBGOUT ){
             echo $msg."\n";
         }
@@ -50,16 +50,12 @@ class MiRouter
     }
 
 	/**
-	 * @param RequestUri $requestUri
-	 * @param $paths
+	 * @param array $routerIni - array with the .ini main config
+	 * @param int $wtd - what to debug
 	 *
-	 * Sample: pepe.acme.com/xxx
 	 */
-	//public function __construct( RequestUri $requestUri, array $routerIni)
-    public function __construct( array $routerIni, int $wtd=null ) //self::DBGNONE )
+    public function __construct( array $routerIni, int $wtd=null )
 	{
-
-        //$this->routerIni = $routerIni;
         $requestUri      = new RequestUri();
         $paths           = $routerIni['paths'];
 
@@ -74,14 +70,11 @@ class MiRouter
             }
         }
 
-
         if($this->WTD!=self::DBGNONE) $this->dbg( $this->eEcho($requestUri) );
 
 		// Parse hosts.ini
     		$hosts = parse_ini_file($paths['routes'] . 'hosts.ini', true);
             if($this->WTD!=self::DBGNONE) $this->dbg( $this->eEcho($hosts) );
-
-
 
 		// Find the $requestUri->host or $requestUri->host_base section to get the routes value
 		// If $requestUri->host (john.acme.com) is not found then check for $requestUri->host_base (acme.com)
@@ -101,20 +94,8 @@ class MiRouter
                 $this->noRoute("No routes defined for: {$hosts_section}");
                 return;
             }
-/*
-		// If uri==login then redirect to login
-            if( strtolower($requestUri->uri)=='login' && $hosts[$hosts_section]['login']??false ){
-                $this->route( $paths['src'] . $hosts[$hosts_section]['login'] );
-                return;
-            }
 
-		// If uri==logout then redirect to logout
-            if( strtolower($requestUri->uri)=='logout' && $hosts[$hosts_section]['logout']??false ){
-                $this->route( $paths['src'] . $hosts[$hosts_section]['logout'] );
-                return;
-            }
-*/
-		// If routes is true, then must exists a .ini filename with the section name
+		// If routes is true, then must exist a .ini filename with the section name
             $routes_filename = $paths['routes'] . $hosts_section . '.ini';
             if (!file_exists($routes_filename)) {
                 $this->noRoute("Can't find routes file: {$routes_filename}");
@@ -265,14 +246,8 @@ class RequestUri
                 $this->params[$v[0]]=$v[1];
             }
         }
-
         $this->uri = preg_replace('/\/\/{1,}/', '/', $this->uri);		// Replace multiple //
-
         $this->uri = preg_replace('/(^\/)|(\/$)/', '', $this->uri);	// Replace first /
-        //$this->uri = preg_replace('/^\//', '', $this->uri);	// Replace first /
-        //$this->uri = preg_replace('/\/$/', '', $this->uri);	// Replace first and last /
-
         $this->auri=explode('/',$this->uri);
-        //$this->uri .= '/';
     }
 }
