@@ -25,7 +25,7 @@ You should configure one `.htaccess` file on a document root to activate automat
 </IfModule>
 ```
 
-`/mirouter.php` file (we have the main router file out of document root):
+`/router.php` file (we have the main router file out of document root):
 ```
 <?php
     include '../router.php'
