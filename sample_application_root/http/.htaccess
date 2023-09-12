@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+
+    #RewriteRule ^router([0-9]*)$ router.php?whichRouter=$1 [NC,L,QSA]
+
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^(.*)$ /router.php [NC,L,QSA]
+
+</IfModule>
