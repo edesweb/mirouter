@@ -150,4 +150,6 @@ On that file should exists the section corresponding with the route of the URL.
 
 In `acme.com/fireworks` sould exists the section `fireworks`, if does't then will try to use de `default` section and if also doesn't exists then that will be an error.
 
-When a route is found then MiRouter checks if the key `public` or `auth-req`, if the route requires authentication then the file indicated on the key `auth_checker' in the `hosts.ini` file will be used to check if the user is authenticated. MiRouter doesn't have any auth system, you must provide it.
+When a route is found then MiRouter checks the key `public` or `auth-req`, if the route requires authentication then the file indicated on the key **`auth_checker`** in the `hosts.ini` file will be used to check if the user is authenticated. **MiRouter doesn't have any auth system, you must provide it.**
+
+
