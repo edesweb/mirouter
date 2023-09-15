@@ -8,7 +8,7 @@ include '../../MiRouter.php';
 const DEBUG = false;
 const ROUTER_INI_FILENAME = 'router.ini';
 
-$DEBUG = DEBUG || ($_GET['DEBUG']?? false);
+$DEBUG = DEBUG | ($_GET['DEBUG']?? false);
 
 
 if( !function_exists('eEcho') ) {
