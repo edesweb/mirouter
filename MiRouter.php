@@ -27,16 +27,12 @@ class MiRouter
 	public string $reason='';
 	public int $returnCode=self::RETCODE_OK;
 	public string $filename='';
+    private $plugin=false;
 
-	private function noRoute($reason): void
+    private function noRoute($reason): void
 	{
 		$this->returnCode = self::RETCODE_ERROR;
 		$this->reason 	  = $reason;
-	}
-	private function route($filename): void
-	{
-		$this->returnCode = self::RETCODE_OK;
-		$this->filename	  = $filename;
 	}
 
     private function dbg( $msg ): void
@@ -175,20 +171,43 @@ class MiRouter
                 }
             }
 
+
+
         // if $uri_section[script] is empty load the section_name.php
-            $uri_section['script'] = $uri_section['script']?? null;
+            $this->plugin           = false;
+            $uri_section['script']  = $uri_section['script']?? null;
             if ($uri_section['script'] == null) {
                 $script_to_load = $paths['src'] . $requestUri->auri[count($requestUri->auri) - 1] . '.php';
                 if($this->WTD!=self::DBGNONE)  $this->dbg("Load(1) {$script_to_load}");
+                if (!file_exists($script_to_load)) {
+                    $this->noRoute("Can't load {$script_to_load}");
+                    return;
+                }
             } else {
                 $script_to_load = $paths['src'] . $uri_section['script'];
                 if($this->WTD!=self::DBGNONE)  $this->dbg("Load(2) {$script_to_load}");
+
+
+                $this->filename     = $script_to_load;
+                $re = '/'.$routerIni['plugins']['regexp'].'/';
+
+                if( preg_match_all($re, $uri_section['script'], $matches, PREG_SET_ORDER, 0) ){
+                    //echo $matches[0]['PLUGIN'].'<BR>'.$matches[0]['SCRIPT'];exit;
+                    $plugin = $matches[0]['PLUGIN']?? false;
+                    $script = $matches[0]['SCRIPT']?? false;
+                    if( $plugin && $script ){
+                        $this->plugin       = $plugin;
+                        $this->filename     = $script;
+                    }
+                }else{
+                    if (!file_exists($script_to_load)) {
+                        $this->noRoute("Can't load {$script_to_load}");
+                        return;
+                    }
+                }
             }
-            if (!file_exists($script_to_load)) {
-                $this->noRoute("Can't load {$script_to_load}");
-                return;
-            }
-            $this->route($script_to_load);
+            $this->returnCode   = self::RETCODE_OK;
+
 	}
 
     private function eEcho($s,$ret=true): string
