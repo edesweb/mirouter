@@ -27,6 +27,7 @@ class MiRouter
 	public string $reason='';
 	public int $returnCode=self::RETCODE_OK;
 	public string $filename='';
+    public array $libs_to_include=array();
     private $plugin=false;
 
     private function noRoute($reason): void
@@ -206,7 +207,23 @@ class MiRouter
                     }
                 }
             }
-            $this->returnCode   = self::RETCODE_OK;
+
+
+        // Replace the lib key by the mirouterconfig/libs section keys
+            $uri_section['libs'] = $uri_section['libs']?? '';
+            $libs = trim($uri_section['libs']);
+            $libs2include = array();
+            if($libs!=''){
+                $libs = explode(',',$libs);
+                foreach($libs as $lib){
+                    if( isset( $rini['mirouterconfig/libs'][trim($lib)]) ){
+                        $this->libs_to_include[] = $rini['mirouterconfig/libs'][trim($lib)];
+                    }
+                }
+            }
+
+
+        $this->returnCode   = self::RETCODE_OK;
 
 	}
 
