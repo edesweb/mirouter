@@ -107,13 +107,29 @@ class MiRouter
 		// Get section for the requested uri
             $uri_section = $rini[$requestUri->uri] ?? null;
             if ($uri_section == null) {
-                if($this->WTD!=self::DBGNONE)  $this->dbg("Not found, trying to find  [default] section...");
-                $requestUri->uri = 'default';
-                $uri_section     = $rini[$requestUri->uri] ?? null;
-                if ($uri_section == null) {
-                    $this->noRoute("Can't find route to {$requestUri->uri} in file {$routes_filename}");
-                    return;
-                }
+
+                // if wild_router then return the $requestUri->uri.php
+                    $wild_router = $rini['mirouterconfig']['wild_router']?? false;
+                    if( $wild_router ){
+                        $script_to_load = $requestUri->uri. (( strpos($requestUri->uri,'.')===false )? '.php': '');
+                        if( !file_exists($paths['src'].$script_to_load) ){
+                            $this->noRoute("Can't find route to {$script_to_load}");    //" in file {$routes_filename}");
+                            return;
+                        }
+                        $this->filename     = $paths['src'] .$script_to_load;
+                        $this->returnCode   = self::RETCODE_OK;
+                        return;
+                    }
+
+
+                // Check if exists [default] section, if not -> error
+                    if($this->WTD!=self::DBGNONE)  $this->dbg("Not found, trying to find  [default] section...");
+                    $requestUri->uri = 'default';
+                    $uri_section     = $rini[$requestUri->uri] ?? null;
+                    if ($uri_section == null) {
+                        $this->noRoute("Can't find route to {$requestUri->uri} in file {$routes_filename}");
+                        return;
+                    }
             }
             if($this->WTD!=self::DBGNONE)  $this->dbg("Section: {$requestUri->uri}\n" . $this->eEcho($uri_section) );
 
@@ -145,22 +161,30 @@ class MiRouter
 
             if ( $uri_section['public']==false || $uri_section['auth-req']==true ) {
                 if($this->WTD!=self::DBGNONE)  $this->dbg("Authentication required ({$requestUri->uri}['public']=false or {$requestUri->uri}['auth-req']=true )");
-                // Try to get the auth_checker key
-                if (!isset($hosts[$hosts_section]['auth_checker'])) {
-                    $this->noRoute("check-login not defined in hosts.ini, section {$hosts_section}");
-                    return;
+
+                // Check if session_checker key exists in the routes_file
+                if( isset( $rini['mirouterconfig']['session_checker'] ) ){
+                    $auth_checker_file = $paths['src'] . $rini['mirouterconfig']['session_checker'];
+                }else{
+                    // Try to get the session_checker key in the hosts file
+                    if (!isset($hosts[$hosts_section]['session_checker'])) {
+                        $this->noRoute("check-login not defined in hosts.ini, section {$hosts_section}");
+                        return;
+                    }
+                    $auth_checker_file = $paths['src'] . $hosts[$hosts_section]['session_checker'];
                 }
-                $auth_checker_file = $paths['src'] . $hosts[$hosts_section]['auth_checker'];
+
                 if( !file_exists($auth_checker_file) ){
-                    $this->noRoute("auth_checker file does not exists: {$hosts_section}[auth_checker]={$auth_checker_file}");
+                    $this->noRoute("session_checker file does not exists: {$auth_checker_file}");
                     return;
                 }
+
                 // include the $auth_checker_file and try to execute a function called like the file but without '.php'
                 // that function is the responsible of checking if the user is authenticated.
                 include $auth_checker_file;
                 $function_to_execute = strtolower( str_replace('.','_',str_ireplace('.php','',basename($auth_checker_file)) ) );
                 if( !function_exists($function_to_execute)){
-                    $this->noRoute("[{$function_to_execute}] function does not exists in: {$hosts_section}[auth_checker]={$auth_checker_file}");
+                    $this->noRoute("[{$function_to_execute}] function does not exists in: {$auth_checker_file}");
                     return;
                 }
                 $checkSessionRet = $function_to_execute();
